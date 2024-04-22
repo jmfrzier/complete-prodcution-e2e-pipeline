@@ -9,12 +9,9 @@ pipeline {
   environment {
         APP_NAME = "complete-prodcution-e2e-pipeline"
         RELEASE = "1.0.0"
-        DOCKER_USER = "dmancloud"
-        DOCKER_PASS = 'dockerhub'
+        DOCKER_USER = "jmfrzier"
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-        /* JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN") */
-
     }
 
   stages {
@@ -27,7 +24,7 @@ pipeline {
 
     stage("Checkout from SCM"){
             steps {
-                git branch: 'main', credentialsId: 'github', url: 'https://github.com/dmancloud/complete-prodcution-e2e-pipeline'
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/jmfrzier/complete-prodcution-e2e-pipeline'
             }
 
         }
@@ -37,7 +34,7 @@ pipeline {
         container(name: 'kaniko', shell: '/busybox/sh') {
           sh '''#!/busybox/sh
 
-            /kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination=${IMAGE_NAME}:${IMAGE_TAG} --destination=${IMAGE_NAME}:latest
+            /kaniko/executor --insecure --dockerfile `pwd`/Dockerfile --context `pwd` --destination=${IMAGE_NAME}:${IMAGE_TAG} --destination=${IMAGE_NAME}:latest
           '''
         }
       }
